@@ -6,10 +6,10 @@ namespace AncestorTable.Services;
 
 internal partial class PedigreeTraversalService
 {
-    public IEnumerable<Ancestor>Progenitors(Individu pointPerson, int maxGenerations = 17)
+    public IEnumerable<Ancestor> Progenitors(Individu pointPerson, int maxGenerations = 17)
     {
         CountryLookupService countryLookupService = new();
-        DupesDetectionService dupesDetectionService = new();
+        DuplicationCounterService duplicationCounterService = new();
 
         return TraverseAncestry(pointPerson);
 
@@ -17,44 +17,42 @@ internal partial class PedigreeTraversalService
         {
             if (person != null)
             {
-                dupesDetectionService.IncrementCounter(person.Id);
+                duplicationCounterService.IncrementCounter(person.Id);
             }
 
             if (IsLeaf())
             {
                 if (person == null)
                 {
-                    yield return
-                        new Ancestor
-                        {
-                            AhnentafelNumber = ahnentafelNumber,
-                            GenerationNumber = generationNumber,
-                            AncestryPercent = AncestryPercent()
-                        };
+                    yield return new Ancestor
+                    {
+                        AhnentafelNumber = ahnentafelNumber,
+                        GenerationNumber = generationNumber,
+                        AncestryPercent = AncestryPercent()
+                    };
                 }
                 else
                 {
                     var country = Country();
                     var name = PersonName();
-                    yield return
-                        new Ancestor
-                        {
-                            PersonId = person.Id,
-                            Dupes = Dupes(),
-                            AhnentafelNumber = ahnentafelNumber,
-                            GenerationNumber = generationNumber,
-                            Sex = Sex(),
-                            ProgenitorStatus = ProgenitorStatus(),
-                            FirstName = name?.Given,
-                            Surname = name?.Surname,
-                            Century = Century(),
-                            Country = country?.Name,
-                            OriginalCountry = OriginalCountry(),
-                            Year = Year(),
-                            NationalFlag = country?.NationalFlag,
-                            Continent = country?.Continent?.Name,
-                            AncestryPercent = AncestryPercent(),
-                        };
+                    yield return new Ancestor
+                    {
+                        PersonId = person.Id,
+                        DuplicationNumber = DuplicationNumber(),
+                        AhnentafelNumber = ahnentafelNumber,
+                        GenerationNumber = generationNumber,
+                        Sex = Sex(),
+                        ProgenitorStatus = ProgenitorStatus(),
+                        FirstName = name?.Given,
+                        Surname = name?.Surname,
+                        Century = Century(),
+                        Country = country?.Name,
+                        OriginalCountry = OriginalCountry(),
+                        Year = Year(),
+                        NationalFlag = country?.NationalFlag,
+                        Continent = country?.Continent?.Name,
+                        AncestryPercent = AncestryPercent(),
+                    };
                 }
             }
 
@@ -87,7 +85,7 @@ internal partial class PedigreeTraversalService
             string? Year() => YearRegex().Match(Birth()?.Date ?? "").Captures.FirstOrDefault()?.Value;
 
             string? Century() => Year() is null or "" ? "" : $"{Year()![..2]}00s";
-            
+
             IndividualName? PersonName() => person.Names.FirstOrDefault();
 
             string Sex() => ahnentafelNumber % 2 == 0 ? "Male" : "Female";
@@ -98,7 +96,7 @@ internal partial class PedigreeTraversalService
 
             string PersonId() => person.Id ?? "";
 
-            int Dupes() => dupesDetectionService.Dupes[PersonId()];
+            int DuplicationNumber() => duplicationCounterService.Counter[PersonId()];
 
             Family? Family() => person?.ChildInFamilies?.FirstOrDefault();
 

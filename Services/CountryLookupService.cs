@@ -27,43 +27,43 @@ internal class CountryLookupService
         var name = OriginalCountryName(location);
 
         ReplaceUkWithEnglandScotlandWales();
+        ReplaceChannelIslandsWithJerseyGuernsey();
 
-        var exactMatch = _geographyService.Countries.FirstOrDefault(country => country.Name == name);
-        if (exactMatch != null)
+        var exactCountry = _geographyService.Countries.FirstOrDefault(country => IsCanonical(country) && name == country.Name);
+        if (exactCountry != null)
         {
-            return exactMatch;
+            return exactCountry;
         }
 
-        // TODO: Fix for The Netherlands
-        var caseInsensitiveSubstringMatch = _geographyService.Countries.FirstOrDefault(country => name.Contains(country.Name, StringComparison.Ordinal));
-        if (caseInsensitiveSubstringMatch != null)
+        var substringCountry = _geographyService.Countries.FirstOrDefault(country => IsCanonical(country) && name.Contains(country.Name, StringComparison.Ordinal));
+        if (substringCountry != null)
         {
-            return caseInsensitiveSubstringMatch;
+            return substringCountry;
         }
 
-        var exactMatchAlias = _geographyService.Countries.FirstOrDefault(country => country.Name == name);
-        if (exactMatchAlias != null)
+        var exactAlias = _geographyService.CountryAliases.FirstOrDefault(countryAlias => countryAlias.Alias == name);
+        if (exactAlias != null)
         {
-            return exactMatchAlias;
+            return exactAlias.Country;
         }
 
-        var caseInsensitiveSubstringMatchAlias = _geographyService.Countries.FirstOrDefault(country => name.Contains(country.Name, StringComparison.InvariantCultureIgnoreCase));
-        if (caseInsensitiveSubstringMatchAlias != null)
+        var substringAlias = _geographyService.CountryAliases.FirstOrDefault(countryAlias => name.Contains(countryAlias.Alias, StringComparison.Ordinal));
+        if (substringAlias != null)
         {
-            return caseInsensitiveSubstringMatchAlias;
+            return substringAlias.Country;
         }
 
         // Regex match
-        var regexMatch = _geographyService.CountryAliases.Where(IsRegexPattern).Where(IsMatch).Select(countryAlias => countryAlias.Country).FirstOrDefault();
-        if (regexMatch != null)
+        var aliasRegexCountry = _geographyService.CountryAliases.Where(IsRegexPattern).Where(IsMatch).Select(countryAlias => countryAlias.Country).FirstOrDefault();
+        if (aliasRegexCountry != null)
         {
-            return regexMatch;
+            return aliasRegexCountry;
         }
 
-        // Unmatched countries
-        var newCountry = new Country { Name = name, OriginalName = name };
-        _geographyService.Countries.Add(newCountry);
-        return newCountry;
+        // Unmatched
+        var unmatchedCountry = new Country { Name = name };
+        _geographyService.Countries.Add(unmatchedCountry);
+        return unmatchedCountry;
 
         void ReplaceUkWithEnglandScotlandWales()
         {
@@ -73,9 +73,19 @@ internal class CountryLookupService
             }
         }
 
-        bool IsRegexPattern(CountryAlias countryAlias) => countryAlias.Alias != null && new[] { '*', '+', '[' }.Any(countryAlias.Alias.Contains);
+        void ReplaceChannelIslandsWithJerseyGuernsey()
+        {
+            if (Last(location).Equals("Channel Islands", StringComparison.InvariantCultureIgnoreCase) && SecondLast(location!) is not null)
+            {
+                name = SecondLast(location);
+            }
+        }
+
+        bool IsRegexPattern(CountryAlias countryAlias) => countryAlias.Alias != null && new[] { '*', '+', '[' , '\\' }.Any(countryAlias.Alias.Contains);
 
         bool IsMatch(CountryAlias countryAlias) => Regex.IsMatch(name, countryAlias.Alias!, RegexOptions.IgnoreCase);
+
+        bool IsCanonical(Country country) => country.TwoLetterCode != null;
     }
 
     string Last(string location) => Part(location, 0)!;

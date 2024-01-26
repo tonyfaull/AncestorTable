@@ -4,8 +4,6 @@ internal record Country
 {
     public string Name { get; init; } = "";
 
-    public string? OriginalName { get; init; }
-
     public string? TwoLetterCode { get; init; }
 
     public Continent? Continent { get; init; }

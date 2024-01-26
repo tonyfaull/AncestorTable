@@ -4,11 +4,13 @@ internal record Ancestor
 {
     public string? PersonId { get; init; }
 
-    public int Dupes { get; init; }
+    public int DuplicationNumber { get; init; }
 
     public int AhnentafelNumber { get; init; }
 
     public int GenerationNumber { get; init; }
+
+    public string? Year { get; init; }
 
     public string? Sex { get; init; }
 
@@ -21,8 +23,6 @@ internal record Ancestor
     public string? Century { get; init; }
 
     public string? Country { get; init; }
-
-    public string? Year { get; init; }
 
     public string? OriginalCountry { get; init; }
 

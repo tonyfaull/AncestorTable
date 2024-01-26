@@ -1,8 +1,10 @@
 ﻿"Search","Replacement"
 Afrique du Sud,South Africa
+Alderney,Guernsey
 Amsterdam Netherlands,The Netherlands
 Belguim.,Belgium
 Bundesrepublik Deutschland,Germany
+Burma,Myanmar
 Cabo de Goede Hoop,South Africa
 Caep de Goede Hoop,South Africa
 Cape Province South Africa,South Africa
@@ -11,8 +13,12 @@ Deutschland,Germany
 Dutch Cape Colony,South Africa
 Dutch East Indies,Indonesia
 East Timor,Timor-Leste
+England,United Kingdom
+Wales,United Kingdom
+Northern Ireland,United Kingdom
+Scotland,United Kingdom
 German Empire,Germany
-Heiliges.*,Germany
+Heiliges Römisches Reich,Germany
 Holland,The Netherlands
 Holy Roman Empire,Germany
 Indian peninsula,India
@@ -31,6 +37,7 @@ Provence-Alpes-C,France
 Prussia,Germany
 Roggeveld,South Africa
 Schweden,Sweden
+\bSa\b,South Africa
 So Af,South Africa
 So. Africa,South Africa
 Soth Africa,South Africa
