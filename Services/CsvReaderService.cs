@@ -19,18 +19,18 @@ public class CsvReaderService
         }
     }
 
-    private TextFieldParser OpenCsv(string fileName)
+    private static TextFieldParser OpenCsv(string fileName)
     {
-        var textFieldParser = new TextFieldParser(fileName)
+        var csv = new TextFieldParser(fileName)
         {
             Delimiters = new[] { "," },
             HasFieldsEnclosedInQuotes = true,
             TrimWhiteSpace = true
         };
         SkipTheHeaderRow();
-        return textFieldParser;
+        return csv;
 
         // Local functions
-        void SkipTheHeaderRow() => _ = textFieldParser.ReadLine();
+        void SkipTheHeaderRow() => _ = csv.ReadLine();
     }
 }

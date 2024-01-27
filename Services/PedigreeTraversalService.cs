@@ -6,13 +6,17 @@ namespace AncestorTable.Services;
 
 internal partial class PedigreeTraversalService
 {
-    public IEnumerable<Ancestor> Progenitors(Individu pointPerson, int maxGenerations = 17)
+    public IEnumerable<Ancestor> Progenitors(Individu pointPerson)
     {
+        const int maxGenerations = 25;
+
         CountryLookupService countryLookupService = new();
         DuplicationCounterService duplicationCounterService = new();
+        GedcomReaderService gedcomReaderService = new();
 
         return TraverseAncestry(pointPerson);
 
+        // Local functions
         IEnumerable<Ancestor> TraverseAncestry(Individu? person, int generationNumber = 1, int ahnentafelNumber = 1, string? countryOfChild = null)
         {
             if (person != null)
@@ -28,6 +32,7 @@ internal partial class PedigreeTraversalService
                     {
                         AhnentafelNumber = ahnentafelNumber,
                         GenerationNumber = generationNumber,
+                        EndYear = EndYear(),
                         AncestryPercent = AncestryPercent()
                     };
                 }
@@ -37,17 +42,17 @@ internal partial class PedigreeTraversalService
                     var name = PersonName();
                     yield return new Ancestor
                     {
-                        PersonId = person.Id,
-                        DuplicationNumber = DuplicationNumber(),
                         AhnentafelNumber = ahnentafelNumber,
                         GenerationNumber = generationNumber,
+                        EndYear = EndYear(),
+                        DuplicationNumber = DuplicationNumber(),
+                        PersonId = person.Id,
                         Sex = Sex(),
                         ProgenitorStatus = ProgenitorStatus(),
                         FirstName = name?.Given,
                         Surname = name?.Surname,
                         Century = Century(),
                         Country = country?.Name,
-                        OriginalCountry = OriginalCountry(),
                         Year = Year(),
                         NationalFlag = country?.NationalFlag,
                         Continent = country?.Continent?.Name,
@@ -78,8 +83,6 @@ internal partial class PedigreeTraversalService
 
             Country? Country() => countryLookupService.Country(Birth()?.Location);
 
-            string OriginalCountry() => countryLookupService.OriginalCountryName(Birth()?.Location);
-
             double AncestryPercent() => 1 / Math.Pow(2, generationNumber - 1);
 
             string? Year() => YearRegex().Match(Birth()?.Date ?? "").Captures.FirstOrDefault()?.Value;
@@ -103,6 +106,8 @@ internal partial class PedigreeTraversalService
             Individu? Father() => generationNumber < maxGenerations ? Family()?.Husband : null;
 
             Individu? Mother() => generationNumber < maxGenerations ? Family()?.Wife : null;
+
+            string EndYear() => gedcomReaderService.YearOfBirth(pointPerson)!;
 
             bool OfUnknownParentage() => Father() == null && Mother() == null;
 

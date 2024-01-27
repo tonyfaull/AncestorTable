@@ -7,15 +7,7 @@ internal class CountryLookupService
 {
     private readonly GeographyService _geographyService = new();
 
-    public string OriginalCountryName(string? location)
-    {
-        if (location is null or "")
-        {
-            return "";
-        }
-
-        return Last(location);
-    }
+    private string OriginalCountryName(string? location) => location is null or "" ? "" : Last(location);
 
     public Country? Country(string? location)
     {
@@ -47,7 +39,7 @@ internal class CountryLookupService
             return exactAlias.Country;
         }
 
-        var substringAlias = _geographyService.CountryAliases.FirstOrDefault(countryAlias => name.Contains(countryAlias.Alias, StringComparison.Ordinal));
+        var substringAlias = _geographyService.CountryAliases.FirstOrDefault(countryAlias => name.Contains(countryAlias.Alias!, StringComparison.Ordinal));
         if (substringAlias != null)
         {
             return substringAlias.Country;
@@ -92,5 +84,5 @@ internal class CountryLookupService
 
     string? SecondLast(string location) => Part(location, 1);
 
-    private string? Part(string location, int index) => location.Split(",").Reverse().Select(place => place?.Trim()).Skip(index).FirstOrDefault();
+    private static string? Part(string location, int index) => location.Split(",").Reverse().Select(place => place?.Trim()).Skip(index).FirstOrDefault();
 }

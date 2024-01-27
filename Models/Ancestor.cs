@@ -2,11 +2,11 @@
 
 internal record Ancestor
 {
-    public string? PersonId { get; init; }
+    public int AhnentafelNumber { get; init; }
 
     public int DuplicationNumber { get; init; }
 
-    public int AhnentafelNumber { get; init; }
+    public string? PersonId { get; init; }
 
     public int GenerationNumber { get; init; }
 
@@ -24,11 +24,11 @@ internal record Ancestor
 
     public string? Country { get; init; }
 
-    public string? OriginalCountry { get; init; }
-
     public string? NationalFlag { get; set; }
 
     public string? Continent { get; init; }
+
+    public string? EndYear { get; init; }
 
     public double AncestryPercent { get; init; }
 }
