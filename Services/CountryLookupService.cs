@@ -57,6 +57,7 @@ internal class CountryLookupService
         _geographyService.Countries.Add(unmatchedCountry);
         return unmatchedCountry;
 
+        //Local functions
         void ReplaceUkWithEnglandScotlandWales()
         {
             if (Last(location).Equals("United Kingdom", StringComparison.InvariantCultureIgnoreCase) && SecondLast(location!) is not null)

@@ -2,10 +2,10 @@
 
 internal class ProgenitorsService
 {
-    public void WriteProgenitorsCsv(string? yearOfBirth = null, string? gedFile = null, string? csvFile = null)
+    public void WriteProgenitorsCsv(int? descendantYearBorn = null, string? gedFile = null, string? csvFile = null)
     {
         ConsoleReaderService consoleReaderService = new();
-        GedcomReaderService gedcomService = new();
+        GedcomReaderService gedcomReaderService = new();
         PedigreeTraversalService pedigreeTraversalService = new();
         FieldMapperService fieldMapperService = new();
         CsvWriterService csvWriterService = new();
@@ -18,9 +18,9 @@ internal class ProgenitorsService
 
         try
         {
-            var gedcom = gedcomService.LoadGedcomFile(gedFile!);
-            var pointPerson = gedcomService.PointPerson(gedcom, yearOfBirth);
-            var progenitors = pedigreeTraversalService.Progenitors(pointPerson);
+            var gedcom = gedcomReaderService.LoadGedcomFile(gedFile!);
+            var descendant = gedcomReaderService.Descendant(gedcom, descendantYearBorn);
+            var progenitors = pedigreeTraversalService.Progenitors(descendant);
             var cells = fieldMapperService.Cells(progenitors);
             var csvLines = csvWriterService.CsvLines(cells);
             textOutputService.GenerateOutput(csvFile, csvLines);

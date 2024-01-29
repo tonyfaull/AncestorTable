@@ -10,6 +10,7 @@ internal class ConsoleReaderService
         File.WriteAllLines(tempFile, ReadAllLines(), Encoding.UTF8);
         return tempFile;
 
+        //Local functions
         string TempFile() => Path.Combine(Path.GetTempPath(), Path.ChangeExtension(Path.GetRandomFileName(), "ged"));
 
         static IEnumerable<string> ReadAllLines()
