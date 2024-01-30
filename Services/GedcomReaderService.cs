@@ -59,6 +59,4 @@ internal class GedcomReaderService
 
         return null;
     }
-
-    private static TimeSpan? Age(DateTime? from, DateTime? to) => from == null || to == null ? null : to.Value - from.Value;
 }

@@ -7,7 +7,8 @@ internal class PedigreeTraversalService
 {
     public IEnumerable<Ancestor> Progenitors(Individu descendant)
     {
-        const int maxGenerations = 25;
+        const int maxGenerations = 17;
+        const int averageMotherAge = 30;
 
         CountryLookupService countryLookupService = new();
         DuplicationCounterService duplicationCounterService = new();
@@ -34,6 +35,12 @@ internal class PedigreeTraversalService
                         AncestryPercent = AncestryPercent(),
                         Sex = Sex(),
 
+                        ContinentBorn = ContinentBornChild(),
+                        CountryBorn = Country(countryOfChild),
+                        DateBorn = DateBornDefault(),
+                        CenturyBorn = Century(DateBornDefault()),
+                        ProgenitorStatus = "Of unknown parentage",
+
                         SurnameDescendant = descendant?.Names[0].Surname,
                         DateDescendantBorn = DateBorn(descendant),
                         PlaceDescendantBorn = PlaceBorn(descendant),
@@ -59,7 +66,7 @@ internal class PedigreeTraversalService
                         PlaceBorn = PlaceBorn(person),
                         CountryBorn = Country(PlaceBorn(person)),
                         NationalFlagBorn = Country(PlaceBorn(person))?.NationalFlag,
-                        ContinentBorn = Country(PlaceBorn(person))?.Continent?.Name,
+                        ContinentBorn = ContinentBorn(),
                         CenturyBorn = Century(DateBorn(person)),
                         
                         DateDied =  DateDied(),
@@ -67,7 +74,7 @@ internal class PedigreeTraversalService
                         PlaceDied = PlaceDied(),
                         CountryDied = Country(PlaceDied()),
                         
-                        AgeChildBorn = Age(DateBorn(person), DateBorn(person)),
+                        AgeChildBorn = Age(DateBorn(person), DateBorn(child)),
                         DateChildBorn = DateBorn(child),
                         PlaceChildBorn = PlaceBorn(child),
                         CountryChildBorn = Country(PlaceBorn(child)),
@@ -86,12 +93,12 @@ internal class PedigreeTraversalService
             if (!IsLeaf())
             {
                 var countryBorn = CountryBorn();
-                foreach (var ancestor in TraverseAncestry(Father(), person, generationNumber + 1, ahnentafelNumber * 2, countryBorn?.Name).OrderBy(ancestor => ancestor.AhnentafelNumber))
+                foreach (var ancestor in TraverseAncestry(Father(), person, generationNumber + 1, ahnentafelNumber * 2, countryBorn).OrderBy(ancestor => ancestor.AhnentafelNumber))
                 {
                     yield return ancestor;
                 }
 
-                foreach (var ancestor in TraverseAncestry(Mother(), person, generationNumber + 1, ahnentafelNumber * 2 + 1, countryBorn?.Name).OrderBy(ancestor => ancestor.AhnentafelNumber))
+                foreach (var ancestor in TraverseAncestry(Mother(), person, generationNumber + 1, ahnentafelNumber * 2 + 1, countryBorn).OrderBy(ancestor => ancestor.AhnentafelNumber))
                 {
                     yield return ancestor;
                 }
@@ -102,21 +109,21 @@ internal class PedigreeTraversalService
             // Local functions
             double AncestryPercent() => 1 / Math.Pow(2, generationNumber - 1);
 
-            Country? CountryBorn() => Country(PlaceBorn(person));
+            string? CountryBorn() => Country(PlaceBorn(person))?.Name ?? countryOfChild;
 
             string? PlaceBorn(Individu? individual) => gedcomReaderService.PlaceBorn(individual);
 
             string? PlaceDied() => gedcomReaderService.PlaceDied(person);
 
-            DateTime? DateBorn(Individu? individual) => gedcomReaderService.DateBorn(individual) ?? gedcomReaderService.DateBorn(child)?.AddYears(-30);
+            DateTime? DateBorn(Individu? individual) => gedcomReaderService.DateBorn(individual) ?? gedcomReaderService.DateBorn(child)?.AddYears(-averageMotherAge);
 
             DateTime? DateDied() => gedcomReaderService.DateDied(person);
 
-            double? Years(TimeSpan? timeSpan) => timeSpan?.TotalDays / 365.28;
+            double? Years(TimeSpan? timeSpan) => timeSpan is not null && timeSpan.Value != TimeSpan.Zero ? Math.Round(timeSpan.Value.TotalDays / 365.28, 4) : null;
 
-            static TimeSpan? TimeSpan(DateTime? from, DateTime? to) => from is null || to is null ? null : to.Value - from.Value;
+            static TimeSpan? Duration(DateTime? from, DateTime? to) => from is null || to is null ? null : to.Value - from.Value;
 
-            double? Age(DateTime? from, DateTime? to) => Years(TimeSpan(from, to));
+            double? Age(DateTime? from, DateTime? to) => Years(Duration(from, to));
 
             string? Century(DateTime? date) => date is not null ? $"{(date.Value.Year / 100)}00s" : null;
 
@@ -124,7 +131,7 @@ internal class PedigreeTraversalService
 
             string Sex() => ahnentafelNumber % 2 == 0 ? "Male" : "Female";
 
-            bool IsProgenitor() => generationNumber > 1 && countryOfChild != null && countryOfChild != Country(PlaceBorn(child))?.Name;
+            bool IsProgenitor() => generationNumber > 1 && CountryBorn() != countryOfChild;
 
             bool IsLeaf() => IsProgenitor() || generationNumber == maxGenerations || OfUnknownParentage();
 
@@ -141,6 +148,12 @@ internal class PedigreeTraversalService
             bool OfUnknownParentage() => Father() == null && Mother() == null;
 
             Country? Country(string? location) => countryLookupService.Country(location);
+
+            string? ContinentBorn() => Country(PlaceBorn(person))?.Continent?.Name;
+
+            string? ContinentBornChild() => Country(countryOfChild)?.Continent?.Name;
+
+            DateTime? DateBornDefault() => DateBorn(child)?.AddYears(-averageMotherAge);
 
             string ProgenitorStatus()
             {
