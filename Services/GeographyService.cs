@@ -48,7 +48,7 @@ internal class GeographyService
         CountryAlias CountryAlias(string[] values) => new()
         {
             Alias = values[0],
-            Country = Countries.Single(country => country.Name == values[1])
+            Country = Countries.FirstOrDefault(country => country.Name == values[1])
         };
     }
 }
