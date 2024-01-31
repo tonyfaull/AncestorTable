@@ -17,19 +17,16 @@ internal class FieldMapperService
         nameof(Ancestor.Sex),
         nameof(Ancestor.FirstName),
         nameof(Ancestor.Surname),
-        nameof(Ancestor.DateBorn),
-        nameof(Ancestor.CenturyBorn),
-        nameof(Ancestor.CountryBorn),
-        nameof(Ancestor.NationalFlagBorn),
-        nameof(Ancestor.ContinentBorn),
-        nameof(Ancestor.DateDied),
-        nameof(Ancestor.AgeDied),
-        nameof(Ancestor.CountryDied),
-        nameof(Ancestor.DateChildBorn),
         nameof(Ancestor.AgeChildBorn),
-        nameof(Ancestor.CountryChildBorn),
-        nameof(Ancestor.DateDescendantBorn),
-        nameof(Ancestor.CountryDescendantBorn),
+        nameof(Ancestor.AgeDied),
+        nameof(Ancestor.ContinentBorn),
+        nameof(Ancestor.NationalFlagBorn),
+        nameof(Ancestor.CountryBorn),
+        nameof(Ancestor.CenturyBorn),
+        nameof(Ancestor.DateBorn),
+        nameof(Ancestor.DateChildBorn),
+        nameof(Ancestor.DateDied),
+        nameof(Ancestor.YearDescendantBorn),
         nameof(Ancestor.Lineage),
     };
 
@@ -44,19 +41,25 @@ internal class FieldMapperService
         ancestor.Sex,
         ancestor.FirstName,
         ancestor.Surname,
-        $"{ancestor.DateBorn:yyyy-MM-dd}",
-        ancestor.CenturyBorn,
-        $"{ancestor.CountryBorn}",
-        ancestor.NationalFlagBorn,
-        ancestor.ContinentBorn,
-        $"{ancestor.DateDied:yyyy-MM-dd}",
-        $"{ancestor.AgeDied}",
-        $"{ancestor.CountryDied}",
-        $"{ancestor.DateChildBorn:yyyy-MM-dd}",
         $"{ancestor.AgeChildBorn}",
-        $"{ancestor.CountryChildBorn}",
-        $"{ancestor.DateDescendantBorn:yyyy-MM-dd}",
-        $"{ancestor.CountryDescendantBorn}",
+        $"{ancestor.AgeDied}",
+        ancestor.ContinentBorn,
+        ancestor.NationalFlagBorn,
+        $"{ancestor.CountryBorn}",
+        ancestor.CenturyBorn,
+        DateString(ancestor.DateBorn),
+        DateString(ancestor.DateChildBorn),
+        DateString(ancestor.DateDied),
+        $"{ancestor.YearDescendantBorn}",
         ancestor.Lineage,
     };
+
+    static string? DateString(DateTime? date)
+    {
+        if (date is null)
+            return null;
+        if (date.Value.DayOfYear == 1)
+            return $"{date:yyyy}";
+        return $"{date:yyyy-MM-dd}";
+    }
 }
