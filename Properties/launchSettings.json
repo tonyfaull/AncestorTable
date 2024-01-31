@@ -2,7 +2,7 @@
   "profiles": {
     "AncestorTable": {
       "commandName": "Project",
-      "commandLineArgs": "2013 \"Static Data\\FamilySearch-EHF-16gen-2022-10-25.ged\""
+      "commandLineArgs": "2013 \"Static Data\\familysearch-ehf-16gen-oct2022.ged\""
     }
   }
 }

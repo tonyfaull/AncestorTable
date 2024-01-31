@@ -35,7 +35,7 @@
     <None Update="Static Data\country-aliases.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Static Data\FamilySearch-EHF-16gen-2022-10-25.ged">
+    <None Update="Static Data\familysearch-ehf-16gen-oct2022.ged">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -8,7 +8,7 @@ internal record Ancestor
 
     public int? DuplicationNumber { get; init; }
 
-    public double AncestryPercent { get; init; }
+    public decimal AncestryPercent { get; init; }
 
     public string? PersonId { get; init; }
 
@@ -20,11 +20,11 @@ internal record Ancestor
 
     public DateTime? DateDied { get; init; }
 
-    public double? AgeDied { get; init; }
+    public decimal? AgeDied { get; init; }
 
     public DateTime? DateChildBorn { get; init; }
 
-    public double? AgeChildBorn { get; init; }
+    public decimal? AgeChildBorn { get; init; }
 
     public Country? CountryChildBorn { get; init; }
 
@@ -55,4 +55,6 @@ internal record Ancestor
     public string? PlaceDescendantBorn { get; init; }
 
     public Country? CountryDescendantBorn { get; init; }
+
+    public string? Lineage { get; init; }
 }
