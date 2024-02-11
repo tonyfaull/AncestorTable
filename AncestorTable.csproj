@@ -10,21 +10,21 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
-    <NoWarn>1701;1702;S3626</NoWarn>
+    <NoWarn>1701;1702;S3626;IDE0160;NU1701</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>$(WarningsAsErrors);NU1605</WarningsAsErrors>
-    <NoWarn>1701;1702;S3626</NoWarn>
+    <NoWarn>1701;1702;S3626;IDE0160;NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Static Data\countries.csv" />
-    <None Remove="Static Data\places.csv" />
+    <None Remove="StaticData\countries.csv" />
+    <None Remove="StaticData\places.csv" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Static Data\countries.csv">
+    <Content Include="StaticData\countries.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -34,10 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Static Data\country-aliases.csv">
+    <None Update="StaticData\country-aliases.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Static Data\familysearch-ehf-16gen-oct2022.ged">
+    <None Update="StaticData\ehf-16gen.ged">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

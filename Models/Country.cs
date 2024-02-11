@@ -1,6 +1,6 @@
 ﻿namespace AncestorTable.Models;
 
-internal record Country
+public record Country
 {
     public string Name { get; init; } = "";
 
@@ -8,7 +8,7 @@ internal record Country
 
     public Continent? Continent { get; init; }
 
-    public string? NationalFlag => TwoLetterCode != null ? string.Concat(TwoLetterCode.Select(x => char.ConvertFromUtf32(x + 0x1F1A5))) : null;
+    public string? NationalFlag => TwoLetterCode is not null ? string.Concat(TwoLetterCode.Select(x => char.ConvertFromUtf32(x + 0x1F1A5))) : null;
 
     public override string ToString() => Name;
 }

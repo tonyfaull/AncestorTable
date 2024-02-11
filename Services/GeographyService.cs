@@ -4,8 +4,8 @@ namespace AncestorTable.Services;
 
 internal static class FileName
 {
-    public static string Countries { get; } = @"Static Data\countries.csv";
-    public static string CountryAliases { get; } = @"Static Data\country-aliases.csv";
+    public static string Countries { get; } = @"StaticData\countries.csv";
+    public static string CountryAliases { get; } = @"StaticData\country-aliases.csv";
 }
 
 internal class GeographyService
@@ -41,14 +41,15 @@ internal class GeographyService
         Country Country(string[] values) => new()
         {
             Name = values[4],
-            Continent = Continents.Single(continent => continent.Code == values[8]),
+            Continent = Array.Find(Continents, continent => continent.Code == values[8]),
             TwoLetterCode = values[0],
         };
 
         CountryAlias CountryAlias(string[] values) => new()
         {
             Alias = values[0],
-            Country = Countries.FirstOrDefault(country => country.Name == values[1])
+            Country = Countries.Find(country => country.Name == values[1]),
+            MatchType = values[2],
         };
     }
 }

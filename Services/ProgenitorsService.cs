@@ -2,9 +2,10 @@
 
 internal class ProgenitorsService
 {
-    public void WriteProgenitorsCsv(int? descendantYearBorn = null, string? gedFile = null, string? csvFile = null)
+    public void WriteProgenitorsCsv(string? gedFile = null, string? csvFile = null, string? descendantId = null)
     {
         ConsoleReaderService consoleReaderService = new();
+        FamilySearchIdService familySearchIdService = new();
         GedcomReaderService gedcomReaderService = new();
         PedigreeTraversalService pedigreeTraversalService = new();
         FieldMapperService fieldMapperService = new();
@@ -19,8 +20,15 @@ internal class ProgenitorsService
         try
         {
             var gedcom = gedcomReaderService.LoadGedcomFile(gedFile!);
-            var descendant = gedcomReaderService.Descendant(gedcom, descendantYearBorn);
-            var progenitors = pedigreeTraversalService.Progenitors(descendant);
+            var familySearchIds = familySearchIdService.FamilySearchIds(File.ReadAllText(gedFile!)).ToDictionary(item => item.personId, item => item.familySearchId);
+            var descendant = gedcomReaderService.Descendant(gedcom, familySearchIds, descendantId);
+            var progenitors = pedigreeTraversalService.Progenitors(descendant).ToArray();
+
+            foreach (var ancestor in progenitors.Where(ancestor => ancestor.PersonId is not null && familySearchIds.ContainsKey(ancestor.PersonId)))
+            {
+                ancestor.FamilySearchId = familySearchIds[ancestor.PersonId!];
+            }
+
             var cells = fieldMapperService.Cells(progenitors);
             var csvLines = csvWriterService.CsvLines(cells);
             textOutputService.GenerateOutput(csvFile, csvLines);
@@ -36,9 +44,6 @@ internal class ProgenitorsService
         return;
 
         // Local functions
-        bool IsConsoleInput()
-        {
-            return gedFile is null or "";
-        }
+        bool IsConsoleInput() => gedFile is null or "";
     }
 }

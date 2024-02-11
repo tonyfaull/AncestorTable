@@ -12,6 +12,7 @@ internal class FieldMapperService
         nameof(Ancestor.GenerationNumber),
         nameof(Ancestor.DuplicationNumber),
         nameof(Ancestor.PersonId),
+        nameof(Ancestor.FamilySearchId),
         nameof(Ancestor.ProgenitorStatus),
         nameof(Ancestor.AncestryPercent),
         nameof(Ancestor.Sex),
@@ -27,6 +28,13 @@ internal class FieldMapperService
         nameof(Ancestor.DateChildBorn),
         nameof(Ancestor.DateDied),
         nameof(Ancestor.YearDescendantBorn),
+        nameof(Ancestor.ParentNumber),
+        nameof(Ancestor.ParentName),
+        nameof(Ancestor.GrandparentNumber),
+        nameof(Ancestor.GrandparentName),
+        nameof(Ancestor.GreatGrandparentNumber),
+        nameof(Ancestor.GreatGrandparentName),
+        nameof(Ancestor.Angle),
         nameof(Ancestor.Lineage),
     };
 
@@ -36,6 +44,7 @@ internal class FieldMapperService
         $"{ancestor.GenerationNumber}",
         $"{ancestor.DuplicationNumber}",
         $"{ancestor.PersonId}",
+        ancestor.FamilySearchId,
         ancestor.ProgenitorStatus,
         $"{ancestor.AncestryPercent}",
         ancestor.Sex,
@@ -51,7 +60,14 @@ internal class FieldMapperService
         DateString(ancestor.DateChildBorn),
         DateString(ancestor.DateDied),
         $"{ancestor.YearDescendantBorn}",
-        ancestor.Lineage,
+        $"{ancestor.ParentNumber}",
+        $"{ancestor.ParentName}",
+        $"{ancestor.GrandparentNumber}",
+        $"{ancestor.GrandparentName}",
+        $"{ancestor.GreatGrandparentNumber}",
+        $"{ancestor.GreatGrandparentName}",
+        $"{ancestor.Angle}",
+        ancestor.Lineage
     };
 
     static string? DateString(DateTime? date)

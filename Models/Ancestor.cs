@@ -1,6 +1,6 @@
 ﻿namespace AncestorTable.Models;
 
-internal record Ancestor
+public record Ancestor
 {
     public int AhnentafelNumber { get; init; }
 
@@ -40,5 +40,23 @@ internal record Ancestor
 
     public int? YearDescendantBorn { get; init; }
 
+    public int GenerationsBack { get; init; }
+
+    public double Angle { get; init; }
+
+    public string? ParentName{ get; init; }
+
+    public string? GrandparentName { get; init; }
+
+    public string? GreatGrandparentName { get; init; }
+
+    public int? ParentNumber { get; init; }
+
+    public int? GrandparentNumber { get; init; }
+
+    public int? GreatGrandparentNumber { get; init; }
+
     public string? Lineage { get; init; }
+
+    public string? FamilySearchId { get; set; }
 }

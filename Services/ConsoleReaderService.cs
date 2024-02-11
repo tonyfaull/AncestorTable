@@ -11,12 +11,12 @@ internal class ConsoleReaderService
         return tempFile;
 
         //Local functions
-        string TempFile() => Path.Combine(Path.GetTempPath(), Path.ChangeExtension(Path.GetRandomFileName(), "ged"));
+        static string TempFile() => Path.Combine(Path.GetTempPath(), Path.ChangeExtension(Path.GetRandomFileName(), "ged"));
 
         static IEnumerable<string> ReadAllLines()
         {
             for (var line = Console.ReadLine();
-                 line is not null and not "";
+                 line is not null;
                  line = Console.ReadLine())
             {
                 yield return line;

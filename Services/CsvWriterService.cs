@@ -13,14 +13,9 @@ internal class CsvWriterService
             return null;
         }
 
-        if (value.Contains('"'))
+        if (",\"\r\n".Any(value.Contains))
         {
             return "\"" + value.Replace("\"", "\"\"") + "\"";
-        }
-
-        if (value.Contains(','))
-        {
-            return "\"" + value + "\"";
         }
 
         return value;
