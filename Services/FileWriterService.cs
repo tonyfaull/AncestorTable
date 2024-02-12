@@ -6,6 +6,6 @@ internal class FileWriterService
 {
     public void WriteFile(string fileName, IEnumerable<string> lines)
     {
-        File.WriteAllLines(fileName, lines.ToArray(), Encoding.Unicode);
+        File.WriteAllLines(fileName, lines.ToArray(), Encoding.UTF8);
     }
 }

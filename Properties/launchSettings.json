@@ -2,7 +2,7 @@
   "profiles": {
     "AncestorTable": {
       "commandName": "Project",
-      "commandLineArgs": "\"StaticData/ehf-16gen.ged\" \"progenitors.csv\" 2013"
+      "commandLineArgs": "\"StaticData/ehf-16gen.ged\""
     }
   }
 }

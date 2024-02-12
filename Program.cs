@@ -15,5 +15,5 @@
 
 new AncestorTable.Services.ProgenitorsService().WriteProgenitorsCsv(
     gedFile: args[0],
-    csvFile: args.Skip(1).FirstOrDefault(),
+    csvFile: args.Skip(1).FirstOrDefault() ?? "progenitors.csv",
     descendantId: args.Skip(2).FirstOrDefault());
